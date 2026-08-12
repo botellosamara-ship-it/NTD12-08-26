@@ -1,11 +1,476 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
-    <body>
-        <h1>Hola sapo, {{ person }}!</h1>
-    </body>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicPortal</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            color: white;
+        }
+
+        /* Barra lateral */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 220px;
+            height: 100vh;
+            background-color: #181818;
+            padding: 25px 15px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #1db954;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .menu {
+            list-style: none;
+        }
+
+        .menu li {
+            margin: 20px 0;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #b3b3b3;
+            font-size: 16px;
+            display: block;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .menu a:hover {
+            background-color: #282828;
+            color: white;
+        }
+
+        /* Contenido */
+        .main {
+            margin-left: 220px;
+            padding: 30px;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 30px;
+        }
+
+        .search {
+            background-color: #242424;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            color: white;
+            width: 280px;
+            outline: none;
+        }
+
+        /* Tarjetas */
+        .section-title {
+            margin: 30px 0 20px;
+            font-size: 22px;
+        }
+
+        .music-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #181818;
+            padding: 15px;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            background-color: #282828;
+            transform: translateY(-5px);
+        }
+
+        .album {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .card h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .card p {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .play-btn {
+            margin-top: 12px;
+            background-color: #1db954;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Reproductor */
+        .player {
+            position: fixed;
+            bottom: 0;
+            left: 220px;
+            right: 0;
+            height: 75px;
+            background-color: #282828;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 25px;
+            border-top: 1px solid #333;
+        }
+
+        .song-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .song-cover {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+
+        .controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+
+        .controls button:hover {
+            color: #1db954;
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                width: 70px;
+            }
+
+            .logo {
+                font-size: 0;
+            }
+
+            .logo::after {
+                content: "♪";
+                font-size: 28px;
+            }
+
+            .menu a {
+                font-size: 0;
+                text-align: center;
+            }
+
+            .menu a::first-letter {
+                font-size: 22px;
+            }
+
+            .main {
+                margin-left: 70px;
+                padding: 20px;
+            }
+
+            .player {
+                left: 70px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .search {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Menú lateral -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            🎵 MusicPortal
+        </div>
+
+        <ul class="menu">
+            <li><a href="#">🏠 Inicio</a></li>
+            <li><a href="#">🔥 Tendencias</a></li>
+            <li><a href="#">🎧 Mi música</a></li>
+            <li><a href="#">❤️ Favoritos</a></li>
+            <li><a href="#">📁 Playlists</a></li>
+        </ul>
+
+    </aside>
+
+
+    <!-- Contenido principal -->
+    <main class="main">
+
+        <div class="header">
+
+            <h1>Bienvenido a MusicPortal 🎵</h1>
+
+            <input
+                type="text"
+                class="search"
+                placeholder="Buscar canciones, artistas..."
+            >
+
+        </div>
+
+
+        <!-- Canciones populares -->
+        <h2 class="section-title">Canciones populares</h2>
+
+        <div class="music-grid">
+
+            <div class="card">
+
+                <img
+                    class="album"
+                    src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500"
+                    alt="Álbum"
+                >
+
+                <h3>Blinding Lights</h3>
+                <p>The Weeknd</p>
+
+                <button
+                    class="play-btn"
+                    onclick="reproducir('Blinding Lights', 'The Weeknd')">
+                    ▶
+                </button>
+
+            </div>
+
+
+            <div class="card">
+
+                <img
+                    class="album"
+                    src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=500"
+                    alt="Álbum"
+                >
+
+                <h3>Levitating</h3>
+                <p>Dua Lipa</p>
+
+                <button
+                    class="play-btn"
+                    onclick="reproducir('Levitating', 'Dua Lipa')">
+                    ▶
+                </button>
+
+            </div>
+
+
+            <div class="card">
+
+                <img
+                    class="album"
+                    src="https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=500"
+                    alt="Álbum"
+                >
+
+                <h3>As It Was</h3>
+                <p>Harry Styles</p>
+
+                <button
+                    class="play-btn"
+                    onclick="reproducir('As It Was', 'Harry Styles')">
+                    ▶
+                </button>
+
+            </div>
+
+
+            <div class="card">
+
+                <img
+                    class="album"
+                    src="https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=500"
+                    alt="Álbum"
+                >
+
+                <h3>Flowers</h3>
+                <p>Miley Cyrus</p>
+
+                <button
+                    class="play-btn"
+                    onclick="reproducir('Flowers', 'Miley Cyrus')">
+                    ▶
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Artistas -->
+        <h2 class="section-title">Artistas destacados</h2>
+
+        <div class="music-grid">
+
+            <div class="card">
+                <img
+                    class="album"
+                    src="https://images.unsplash.com/photo-1506157786151-b8491531f063?w=500"
+                    alt="Artista"
+                >
+                <h3>The Weeknd</h3>
+                <p>Pop / R&B</p>
+            </div>
+
+            <div class="card">
+                <img
+                    class="album"
+                    src="https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=500"
+                    alt="Artista"
+                >
+                <h3>Dua Lipa</h3>
+                <p>Pop</p>
+            </div>
+
+            <div class="card">
+                <img
+                    class="album"
+                    src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=500"
+                    alt="Artista"
+                >
+                <h3>Harry Styles</h3>
+                <p>Pop / Rock</p>
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- Reproductor -->
+    <div class="player">
+
+        <div class="song-info">
+
+            <img
+                id="player-cover"
+                class="song-cover"
+                src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200"
+                alt="Portada"
+            >
+
+            <div>
+                <strong id="song-name">Selecciona una canción</strong>
+                <p id="artist-name">---</p>
+            </div>
+
+        </div>
+
+
+        <div class="controls">
+
+            <button onclick="anterior()">⏮</button>
+
+            <button onclick="playPause()" id="play">
+                ▶
+            </button>
+
+            <button onclick="siguiente()">⏭</button>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        let reproduciendo = false;
+
+        function reproducir(cancion, artista) {
+
+            document.getElementById("song-name").textContent = cancion;
+            document.getElementById("artist-name").textContent = artista;
+
+            reproduciendo = true;
+
+            document.getElementById("play").textContent = "⏸";
+        }
+
+
+        function playPause() {
+
+            if (reproduciendo) {
+
+                reproduciendo = false;
+
+                document.getElementById("play").textContent = "▶";
+
+            } else {
+
+                reproduciendo = true;
+
+                document.getElementById("play").textContent = "⏸";
+            }
+        }
+
+
+        function anterior() {
+            alert("Canción anterior");
+        }
+
+
+        function siguiente() {
+            alert("Siguiente canción");
+        }
+
+    </script>
+
+</body>
 </html>
